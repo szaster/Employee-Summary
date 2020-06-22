@@ -11,13 +11,13 @@ test("Can set name via constructor arguments", () => {
   expect(e.name).toBe(name);
 });
 
-test.skip("Can set id via constructor argument", () => {
+test("Can set id via constructor argument", () => {
   const testValue = 100;
   const e = new Employee("Foo", testValue);
   expect(e.id).toBe(testValue);
 });
 
-test.skip("Can set email via constructor argument", () => {
+test("Can set email via constructor argument", () => {
   const testValue = "test@test.com";
   const e = new Employee("Foo", 1, testValue);
   expect(e.email).toBe(testValue);
