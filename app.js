@@ -75,6 +75,17 @@ function managerQuestions() {
   return q;
 }
 
+function engineerQuestions() {
+  const q = employeeQuestions("Engineer");
+  q.push({
+    type: "input",
+    name: "github",
+    message: "What is engineer's Github account?",
+    validate: (name) => mustNotBeEmpty(name, "Engineer's github account"),
+  });
+  return q;
+}
+
 function readManager() {
   return inquirer
     .prompt(managerQuestions())
@@ -82,6 +93,19 @@ function readManager() {
       (manager) =>
         new Manager(manager.name, manager.id, manager.email, manager.office)
     );
+}
+
+function readEngineer(employees) {
+  return inquirer.prompt(engineerQuestions()).then((engineer) => {
+    const employee = new Engineer(
+      engineer.name,
+      engineer.id,
+      engineer.email,
+      engineer.github
+    );
+    employees.push(employee);
+    return employees;
+  });
 }
 
 function run() {
@@ -92,7 +116,8 @@ function run() {
       }
     })
     .then(() => readManager())
-    .then((manager) => render([manager]))
+    .then((manager) => readEngineer([manager]))
+    .then((employees) => render(employees))
     .then((html) => writeToFile(html));
 }
 
