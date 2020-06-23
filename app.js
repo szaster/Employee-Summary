@@ -108,20 +108,20 @@ function readEngineer(employees) {
   });
 }
 
-function readEngineers(employees) {
-  return readEngineer(employees).then((result) => {
+function readMany(employees, reader, role) {
+  return reader(employees).then((result) => {
     return inquirer
       .prompt([
         {
           type: "list",
           name: "more",
-          message: "Do you want to add another engineer?",
+          message: `Do you want to add another ${role}?`,
           choices: ["Yes", "No"],
         },
       ])
       .then((data) => {
         if (data.more === "Yes") {
-          return readEngineers(result);
+          return readMany(result, reader, role);
         }
         return result;
       });
@@ -136,7 +136,7 @@ function run() {
       }
     })
     .then(() => readManager())
-    .then((manager) => readEngineers([manager]))
+    .then((manager) => readMany([manager], readEngineer, "Engeener"))
     .then((employees) => render(employees))
     .then((html) => writeToFile(html));
 }
