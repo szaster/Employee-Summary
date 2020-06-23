@@ -9,7 +9,73 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { run } = require("jest");
 
+function mustNotBeEmpty(str, fieldName) {
+  if (str === "") {
+    return `${fieldName} cannot be empty.`;
+  }
+  return true;
+}
+
+function welcomeScreen() {
+    return inquirer.prompt([
+      {
+        type: "list",
+        name: "welcome",
+        message: "Welcome! This application generates an employee directory. Press continue to proceed?",
+        choices: ["Continue", "Exit"],
+      },
+    ]);
+
+function readManager() {
+  return inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What is manager's name?",
+        validate: (name) => mustNotBeEmpty(name, "Manager's name"),
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "What is manager's ID?",
+        validate: (name) => mustNotBeEmpty(name, "Manager's id"),
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "What is manager's email?",
+        validate: (name) => mustNotBeEmpty(name, "Manager's email"),
+      },
+      {
+        type: "input",
+        name: "office",
+        message: "What is manager's office number?",
+        validate: (name) => mustNotBeEmpty(name, "Manager's office"),
+      },
+    ])
+    .then(
+      (manager) =>
+        new Manager(manager.name, manager.id, manager.email, manager.office)
+    );
+}
+
+function run() {
+    welcomeScreen()
+    .then((data) => {
+        if (data.welcome === "Exit") {
+          process.exit(0);
+        }
+      })
+      .then(() => readManager())
+      .then(manager => console.log(manager));
+}
+
+run();
+
+// console.log(manager);
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
