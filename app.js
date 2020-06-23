@@ -17,6 +17,18 @@ function mustNotBeEmpty(str, fieldName) {
   return true;
 }
 
+function writeToFile(data) {
+  fs.writeFile(outputPath, data, (err) => {
+    if (err) {
+      console.log(err.message);
+      console.log("The file has not been saved!");
+      process.exit(1);
+    } else {
+      console.log("The file has been saved!");
+    }
+  });
+}
+
 function welcomeScreen() {
   return inquirer.prompt([
     {
@@ -71,12 +83,11 @@ function run() {
       }
     })
     .then(() => readManager())
-    .then((manager) => console.log(manager));
+    .then((manager) => render([manager]))
+    .then((html) => writeToFile(html));
 }
 
 run();
-
-// console.log(manager);
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
