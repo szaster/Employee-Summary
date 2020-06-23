@@ -41,34 +41,43 @@ function welcomeScreen() {
   ]);
 }
 
+function employeeQuestions(role) {
+  return [
+    {
+      type: "input",
+      name: "name",
+      message: `What is ${role}'s name?`,
+      validate: (name) => mustNotBeEmpty(name, `${role}'s name`),
+    },
+    {
+      type: "input",
+      name: "id",
+      message: `What is ${role}'s ID?`,
+      validate: (name) => mustNotBeEmpty(name, `${role}'s ID`),
+    },
+    {
+      type: "input",
+      name: "email",
+      message: `What is ${role}'s email?`,
+      validate: (name) => mustNotBeEmpty(name, `${role}'s email`),
+    },
+  ];
+}
+
+function managerQuestions() {
+  const q = employeeQuestions("Manager");
+  q.push({
+    type: "input",
+    name: "office",
+    message: "What is manager's office number?",
+    validate: (name) => mustNotBeEmpty(name, "Manager's office"),
+  });
+  return q;
+}
+
 function readManager() {
   return inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "name",
-        message: "What is manager's name?",
-        validate: (name) => mustNotBeEmpty(name, "Manager's name"),
-      },
-      {
-        type: "input",
-        name: "id",
-        message: "What is manager's ID?",
-        validate: (name) => mustNotBeEmpty(name, "Manager's id"),
-      },
-      {
-        type: "input",
-        name: "email",
-        message: "What is manager's email?",
-        validate: (name) => mustNotBeEmpty(name, "Manager's email"),
-      },
-      {
-        type: "input",
-        name: "office",
-        message: "What is manager's office number?",
-        validate: (name) => mustNotBeEmpty(name, "Manager's office"),
-      },
-    ])
+    .prompt(managerQuestions())
     .then(
       (manager) =>
         new Manager(manager.name, manager.id, manager.email, manager.office)
