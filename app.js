@@ -108,6 +108,26 @@ function readEngineer(employees) {
   });
 }
 
+function readEngineers(employees) {
+  return readEngineer(employees).then((result) => {
+    return inquirer
+      .prompt([
+        {
+          type: "list",
+          name: "more",
+          message: "Do you want to add another engineer?",
+          choices: ["Yes", "No"],
+        },
+      ])
+      .then((data) => {
+        if (data.more === "Yes") {
+          return readEngineers(result);
+        }
+        return result;
+      });
+  });
+}
+
 function run() {
   welcomeScreen()
     .then((data) => {
@@ -116,7 +136,7 @@ function run() {
       }
     })
     .then(() => readManager())
-    .then((manager) => readEngineer([manager]))
+    .then((manager) => readEngineers([manager]))
     .then((employees) => render(employees))
     .then((html) => writeToFile(html));
 }
