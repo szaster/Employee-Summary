@@ -9,7 +9,6 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
-const { run } = require("jest");
 
 function mustNotBeEmpty(str, fieldName) {
   if (str === "") {
@@ -19,14 +18,16 @@ function mustNotBeEmpty(str, fieldName) {
 }
 
 function welcomeScreen() {
-    return inquirer.prompt([
-      {
-        type: "list",
-        name: "welcome",
-        message: "Welcome! This application generates an employee directory. Press continue to proceed?",
-        choices: ["Continue", "Exit"],
-      },
-    ]);
+  return inquirer.prompt([
+    {
+      type: "list",
+      name: "welcome",
+      message:
+        "Welcome! This application generates an employee directory. Press continue to proceed?",
+      choices: ["Continue", "Exit"],
+    },
+  ]);
+}
 
 function readManager() {
   return inquirer
@@ -63,14 +64,14 @@ function readManager() {
 }
 
 function run() {
-    welcomeScreen()
+  welcomeScreen()
     .then((data) => {
-        if (data.welcome === "Exit") {
-          process.exit(0);
-        }
-      })
-      .then(() => readManager())
-      .then(manager => console.log(manager));
+      if (data.welcome === "Exit") {
+        process.exit(0);
+      }
+    })
+    .then(() => readManager())
+    .then((manager) => console.log(manager));
 }
 
 run();
