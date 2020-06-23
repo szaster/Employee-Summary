@@ -86,6 +86,17 @@ function engineerQuestions() {
   return q;
 }
 
+function internQuestions() {
+  const q = employeeQuestions("Intern");
+  q.push({
+    type: "input",
+    name: "school",
+    message: "What is intern's school?",
+    validate: (name) => mustNotBeEmpty(name, "Intern's school"),
+  });
+  return q;
+}
+
 function readManager() {
   return inquirer
     .prompt(managerQuestions())
@@ -102,6 +113,19 @@ function readEngineer(employees) {
       engineer.id,
       engineer.email,
       engineer.github
+    );
+    employees.push(employee);
+    return employees;
+  });
+}
+
+function readIntern(employees) {
+  return inquirer.prompt(internQuestions()).then((intern) => {
+    const employee = new Intern(
+      intern.name,
+      intern.id,
+      intern.email,
+      intern.school
     );
     employees.push(employee);
     return employees;
@@ -137,6 +161,7 @@ function run() {
     })
     .then(() => readManager())
     .then((manager) => readMany([manager], readEngineer, "Engeener"))
+    .then((employees) => readMany(employees, readIntern, "Intern"))
     .then((employees) => render(employees))
     .then((html) => writeToFile(html));
 }
